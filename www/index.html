@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<title>main</title>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<style>
+html{
+	width:100%;
+	height:100%;
+	background-image: url("images/back-ground.png") ;
+	background-size: 100% 100%;
+    background-repeat: no-repeat;	
+}
+#play_bt{
+position: absolute;
+width:35%;
+height:30%;
+top:28%;
+left:36%;
+background-image: url("images/btPelaaOran_03.png");
+
+background-size: 100% 100%;
+background-repeat: no-repeat;	
+
+}
+
+
+#heightScoreBt{
+position: absolute;
+width:30%;
+height:25%;
+top:12%;
+left:3%;
+background-image: url("images/heightScoreBt.png");
+background-size: 100% 100%;
+    background-repeat: no-repeat;	
+
+}
+
+
+.match{
+	opacity:0;
+	-webkit-opacity:0;
+}
+
+
+</style>
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/fastclick.js"></script>
+<script type="text/javascript" src="scripts/quo.js"></script>
+<script type="text/javascript">
+
+function onDeviceReady() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+	
+	$(function() {
+		db=window.openDatabase("gameDb","1.0","Game database",1000000);
+		//BtPlayAnimation();
+		document.addEventListener("backbutton", onBackKeyDown, false);
+		$("#play_bt").bind(tap,function(){
+			
+			$("#play_bt").css({
+				"width":"33%",
+				"height":"28%",
+				"left":"37%",
+				"top":"29%"
+					
+			});
+			setTimeout(function(){	window.location.href='choseLevel.html';},500)
+		})
+		$("#heightScoreBt").bind(tap,function(){
+			$(this).css({
+				"width":"29%",
+				"height":"24%",
+				"top":"13%",
+				"left":"4%"
+				
+			});
+			setTimeout(function(){ window.location.href='Score.html';}, 300);
+			
+		})
+		$("#GoAnimation").bind(tap,function(){
+			setTimeout(function(){ window.location.href='Animation.html';}, 300);
+			
+		})
+		
+		
+	})
+}
+function main(){
+	document.addEventListener("deviceready", onDeviceReady, false);
+}
+function onPause() {
+	
+}
+function onResume() {
+	
+}
+function onBackKeyDown() {
+	navigator.app.exitApp();
+}
+function BtPlayAnimation(){
+	var big=1;
+	function btAnimation(){
+		if(big==1){
+			big=2
+		}else if(big==2){
+			big=1
+		}
+		
+		if(big==2){
+			$("#play_bt").css({
+				"width":"35%",
+				"height":"30%",
+					"left":"36%"
+			});
+		}else if(big==1) {
+			$("#play_bt").css({
+				"width":"30%",
+				"height":"28%",
+					"left":"37%"
+			});
+		}
+	//	big=!big;
+	}
+ 	var setMove=setInterval(btAnimation, 800)
+}
+
+</script>
+
+</header>
+<body onLoad="main()" >
+	<div id="play_bt" ></div>
+	<div id="heightScoreBt"></div>	
+	
+	
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<title>main</title>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<style>
+html{
+	width:100%;
+	height:100%;
+	background-image: url("images/background2_03.png") ;
+	background-size: 100% 100%;
+    background-repeat: no-repeat;	
+}
+#chose_level{
+
+
+
+}
+.none{
+display: none;
+}
+.animation{
+top:0%; 
+display:block;
+width:90%;
+height:70%;
+-webkit-animation: dropAnimation 0.7s ;
+-webkit-animation-iteration-count:1; 
+}
+#canvas1{
+	position:absolute;
+	top:50%;
+	left:0px;
+	height:50%;
+	width:18%;
+	
+	
+}
+@-webkit-keyframes dropAnimation {
+    0% { top:100%;}
+    20%{ top:80%}
+    40% {top:60%;}
+    60% {top:40%}
+    80%{top:20%}
+    1000%{top:0%}
+    
+}
+div,a{
+
+position: absolute;
+}
+
+.lock-level{
+opacity:0;
+}
+
+.lock  a.num_level{
+display: none;
+}
+.unlock a.lock-icon {
+	display: none;
+} 
+
+
+
+
+</style>
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/fastclick.js"></script>
+<script type="text/javascript" src="scripts/database.js"></script>
+
+<script type="text/javascript">
+var lock=[];
+var x =  0;
+var y = 5;
+var speed = 1;
+var numberImg=0;
+
+var deviceHeight=window.innerHeight; 
+var deviceWidth=window.innerWidth ;
+var leng=deviceHeight/2;
+function onDeviceReady() {
+	$(function() {
+		Animation();
+		document.addEventListener("backbutton", onBackKeyDown, false);
+		lock[0]="unlock"
+	for(var i=0;i<10;i++){
+		lock[i+1]="lock";
+	}
+		unLockLevel();
+		setTimeout(function(){
+			$("#chose_level").removeClass("none");
+			$("#chose_level").addClass("animation");
+		},300)
+		
+		
+		
+	})
+}
+
+function unLockLevel(){
+	db=window.openDatabase("gameDb","1.0","Game database",1000000);
+	db.transaction(function(tx){
+		ensureTableExit(tx);
+		var sql='SELECT MAX(level)  maxLevel FROM LevelAndScore';
+		tx.executeSql(sql,[],function(tx,results){
+		var maxLv=	results.rows.item(0).maxLevel;
+		var numMaxLevel=parseInt(maxLv)
+	
+		
+		for(var i=0;i<= numMaxLevel;i++){
+			lock[i]="unlock";
+		}
+		
+		drawLevel();
+			
+		});
+	}, transaction_error);
+	
+}
+function drawLevel(){
+	//var deviceWidth=window.innerWidth ;
+	//var deviceHeight=window.innerHeight; 
+	var leng=deviceHeight/5;
+	var padding=deviceHeight*5/100;
+	var left=(deviceWidth-(5*leng+4*padding))/2;
+	for(var i=0;i<2;i++){
+		for(k=0;k<5;k++){
+			var z=i*5+k;
+		$("#chose_level").append("<div  class='"+lock[z]+"' id='number_"+(i*5+k)+"'><a  class='num_level' data-number='"+((i*5+k)+1)+"'><img class='img_numb' src='images/numbers"+((i*5+k)+1)+".png'/></a><a class='lock-icon'><img src='images/Lock-icon.png'/></a></div>");
+		var num="#number_"+(i*5+k);
+		$(num).css({
+			'width':leng,
+			'height':leng,
+			'left':left+leng*k+padding,
+			'top':leng+padding*i+leng*i,
+			
+		});
+		$(".num_level").bind(tap,function(){
+			var number = $(this).data("number");
+			setTimeout(function(){
+				window.location.href= "play.html?" +number;
+				},300)
+		})
+		
+		}
+		
+	}
+	$("img").css({
+		
+		'width':leng,
+		'height':leng,	
+	});
+	
+}
+
+function choseLevel(){
+	document.addEventListener("deviceready", onDeviceReady, false);
+}
+function onBackKeyDown() {
+	window.location.href='index.html';
+}
+
+function Animation(){
+	 var number=0;
+	 var left=deviceWidth/20;
+     function Move(){
+       number++;
+       if(number==4){
+         number=1;}
+       var imageUrl='"images/b'+number+'.png"';
+       
+       
+       $("#canvas1").css({
+         'left': left,
+        	
+         'background-image' : 'url(' + imageUrl + ')',
+         'background-size':'100% 100%',
+         'background-repeat':'no-repeat'
+       });                
+     }
+     var setMove=setInterval(Move, 1500)
+
+
+}
+function draw() {
+	//var deviceHeight=window.innerHeight; 
+
+	 var left=deviceWidth/20;
+    var canvas  = document.getElementById("canvas1");
+    var context = canvas.getContext("2d");	
+  
+     context.clearRect(left,0,leng,leng);     
+	var img= new Image();
+ 	var imageUrl='"images/a'+numberImg+'.png"';
+	img.src='images/b'+numberImg+'.png';
+	 
+  	context.drawImage(img,left,0,leng,leng);
+}
+
+</script>
+
+</header>
+<body onLoad="choseLevel()" >
+	
+	<div id="chose_level" class="none">
+	
+	</div>
+	<div id="canvas1">
+	
+	</div>
+	
+	
+</body>
+</html>

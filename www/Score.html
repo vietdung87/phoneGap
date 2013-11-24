@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<title>main</title>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<style>
+html{
+	width:100%;
+	height:100%;
+	background-image: url("images/back-ground.png") ;
+	background-size: 100% 100%;
+    background-repeat: no-repeat;	
+}
+body{
+width:98%;
+	height:98%;
+
+}
+
+#main{
+position: relative;
+top:10%;
+left:20%;
+width:60%;
+height:80%;
+border:1px solid black;
+-webkit-border-radius: 10px;
+
+background-image:url("images/slBg.png");
+background-size: 100% 100%;
+ background-repeat: no-repeat;
+display:block;
+-webkit-animation: dropAnimation 0.7s ;
+-webkit-animation-iteration-count:1; 
+    
+
+}
+.animation{
+
+
+}
+@-webkit-keyframes dropAnimation {
+    0% { top:90%;}
+    20%{ top:80%}
+    40% {top:60%;}
+    60% {top:40%}
+    80%{top:20%}
+    1000%{top:10%}
+    
+}
+#previous{
+position:absolute;
+top:0%;
+left:10%;
+width:20%;
+height:20%;
+text-align:right;
+display: block-inline;
+
+}
+
+#show_score{
+position:absolute;
+top:0%;
+left:30%;
+width:40%;
+height:80%;
+text-align: center;
+
+}
+
+#next{
+position:absolute;
+top:0%;
+left:70%;
+width:20%;
+height:20%;
+text-align:left;
+display: block-inline;
+}
+.bthide{
+display: none;
+}
+
+
+</style>
+ <script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/database.js"></script>
+<script type="text/javascript" src="scripts/fitText.js"></script>
+<script type="text/javascript" src="scripts/fastclick.js"></script>
+
+<script type="text/javascript">
+var Level=0;
+function onDeviceReady() {
+	$(function() {
+		fitTxt();
+		document.addEventListener("backbutton", onBackKeyDown, false);
+		db=window.openDatabase("gameDb","1.0","Game database",1000000);
+		
+		showScoreBaseOnLevel();
+		$("#next").bind(tap,function(){
+			showScoreBaseOnLevel()
+		})
+		$("#previous").bind(tap,function(){
+			BackScoreBaseOnLevel()
+		})
+		
+		
+	})
+}
+function main(){
+	document.addEventListener("deviceready", onDeviceReady, false);
+}
+function showScoreBaseOnLevel(){
+	Level+=1;
+	if(Level>15){
+		Level=1;
+	}
+	$("#show_score").empty();
+	$("#show_score").append('<h1>Level '+Level+' </h1>');
+	textOnShowScore();
+	db.transaction(function(tx){
+		ensureTableExit(tx);
+		var sql='SELECT * FROM LevelAndScore WHERE level="'+Level+'" ORDER BY score DESC  LIMIT 0, 5 ' ;
+		tx.executeSql(sql,[],function(tx,results){
+			var len=results.rows.length;
+			if(len>0){
+				for(var i=0;i<len;i++){
+					var item=results.rows.item(i);	
+					var k=i+1;
+				$("#show_score").append("<h1>"+k+". "+item.score+"</h1>");				
+				}		
+				var g= 5-len;
+				for(var h=0;h<g;h++){
+					var j=len+1+h;
+					$("#show_score").append("<h1>"+j+". _ _ _ _ _ </h1>");	
+				}
+				
+			}else{
+				for(var i=0;i<5;i++){
+					var k=i+1;
+					$("#show_score").append("<h1>"+k+". _ _ _ _ _ </h1>");	
+				}
+			}
+			textOnShowScore();
+		
+				
+		},transaction_error)
+		
+	}, transaction_error)
+	
+	
+}
+function BackScoreBaseOnLevel(){
+	Level-=1;
+	if(Level<1){
+		Level=15
+	}
+	$("#show_score").empty();
+	$("#show_score").append('<h1>Level '+Level+' </h1>');
+	textOnShowScore();
+	db.transaction(function(tx){
+		ensureTableExit(tx);
+		var sql='SELECT * FROM LevelAndScore WHERE level="'+Level+'" ORDER BY score DESC  LIMIT 0, 5 ' ;
+		tx.executeSql(sql,[],function(tx,results){
+			var len=results.rows.length;
+			if(len>0){
+				for(var i=0;i<len;i++){
+					var item=results.rows.item(i);	
+					var k=i+1;
+				$("#show_score").append("<h1>"+k+". "+item.score+"</h1>");				
+				}		
+				var g= 5-len;
+				for(var h=0;h<g;h++){
+					var j=len+1+h;
+					$("#show_score").append("<h1>"+j+". _ _ _ _ _ </h1>");	
+				}
+				
+			}else{
+				for(var i=0;i<5;i++){
+					var k=i+1;
+					$("#show_score").append("<h1>"+k+". _ _ _ _ _ </h1>");	
+				}
+			}
+			textOnShowScore();
+		
+				
+		},transaction_error)
+		
+	}, transaction_error)
+	
+}
+function fitTxt(){
+	$("#previous").fitText();
+	$("#next").fitText();
+}
+function textOnShowScore(){
+	$("#show_score h1").css({
+		"width":"100%",
+		"height":"15%",
+		"display":"block-inline"
+	})
+	$("#show_score h1").fitText();
+}
+function onBackKeyDown() {
+	window.location.href='index.html';
+}
+
+</script>
+
+</header>
+<body onLoad="main()" >
+<div id="main">
+	<div id="previous" class="btHide"><h1>Previous</h1></div>
+	<div id="show_score" ></div>
+	<div id="next"><h1>Next</h1></div>
+</div>
+		
+
+	
+	
+</body>
+</html>

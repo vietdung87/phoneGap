@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<title>play</title>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<style>
+html{
+	width:100%;
+	height:100%;
+	background-image: url("images/back-ground.png") ;
+	background-size: 100% 100%;
+    background-repeat: no-repeat;	
+	
+}
+
+#wap{
+
+width:100%;
+height:100%;
+top:0%;
+left:0%;
+boder:1px solid black;
+
+}
+#topGame{
+	position:absolute;
+	width:98%;
+	height:15%;
+	display:inline-block;
+	top:0%;
+	left:0%;
+	
+	
+}
+
+#topGame p{
+color: red;
+display:inline-block;
+height:8%;
+width:30%;
+
+}
+#show_time{
+position:absolute;
+left:2%;
+top:0%
+}
+#show_level{
+position: absolute;
+left:40%;
+top:0%
+}
+#tableGame {
+	
+	position:absolute;
+	width: 100%;
+	height: 80%;
+	top:15%;
+	
+	left:0%;
+	
+	
+}
+
+
+.card {
+	-webkit-perspective: 1000;
+	position: absolute;
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: 0.8s;
+		 
+}
+
+.face {
+	width: 100%;
+	height: 100%;	
+	position: absolute;
+	-webkit-transition: -webkit-transform 0.8s linear, z-index 0.4s linear;	
+}
+.front {
+	z-index:10;
+	
+}
+.back{
+	
+	z-index:8;
+	-webkit-transform: rotateY(-180deg);	
+	
+}
+.flip{
+-webkit-transform: rotateY(-180deg);
+}
+
+.flip .front{
+z-index:8;
+}
+.flip .back{
+z-index:10;
+}
+.match{
+-webkit-transition:0s;
+}
+.match .front{
+	display: none;
+}
+.match .back{
+
+opacity:0.3;
+-webkit-animation: pulsate 0.7s ease-out;
+-webkit-animation-iteration-count:1; 
+
+}
+
+
+#show_score{
+	position:absolute;
+	width:60%;
+	height:65%;
+	left:20%;
+	top:20%;
+	
+	text-align: center;
+	border: 1px solid black ;
+	-webkit-border-radius: 10px;
+	
+	background-image:url("images/slBg.png");
+	background-size: 100% 100%;
+    background-repeat: no-repeat;
+	opacity:1;
+	display: none;
+	color: black;
+}
+.disapear{
+display: none;
+visibility: hidden;
+}
+.drop{
+	display:block;
+	
+-webkit-animation: dropAnimation 1s ;
+-webkit-animation-iteration-count:1; 
+}
+@-webkit-keyframes dropAnimation {
+    0% { top:30%;}
+    10%{ top:28%}
+    20% {top:24%;}
+    30% {top:22%}
+    40%{top:18%}
+    50%{top:16%}
+    60%{top:14%}
+    70%{top:14%}
+    80%{top:16%}
+    90%{top:18%}
+    100%{top:20%}
+}
+#show_score h1{
+color:white;
+}
+#show_score a{
+width:40%;
+height: 15%;
+z-index:2;
+}
+#show_score img{
+width:40%;
+height: 15%;
+}
+
+
+
+
+
+@-webkit-keyframes pulsate {
+    0% {-webkit-transform: scale(1.4, 1.4); opacity: 1;}
+    50% {-webkit-transform: scale(1,1), opacity:0.5;}
+    100% {-webkit-transform: scale(1.2,1.2); opacity: 0.3;}
+}
+/*
+.match .font{
+z-index:8;
+visibility: hidden;
+}
+.match .back{
+	-webkit-transform:none;
+z-index:10;
+}*/
+#animation{
+top:20%;
+}
+</style>
+
+<script type="text/javascript" src="phonegap.js"></script>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/memory-game.js"></script>
+<script type="text/javascript" src="scripts/database.js"></script>
+<script type="text/javascript" src="scripts/fitText.js"></script>
+<script type="text/javascript" src="scripts/fastclick.js"></script>
+<script type="text/javascript" src="scripts/animationAPI.js"></script>
+</header>
+<body onLoad="init()">
+	<div id="wap">
+
+	<div id="topGame"><p id="show_time">Aika :<span id="clock"></span></p><p id="show_level"><p></div>
+	<div id="tableGame"></div>
+	<div id="show_score"></div>
+	<canvas id="animation" ></canvas>
+	</div>
+	
+
+</body>
+</html>
